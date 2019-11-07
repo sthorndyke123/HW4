@@ -36,8 +36,8 @@ def index():
 def add_book():
     form = BookForm()
     if form.validate_on_submit():
-        Book = Favorite_Books(Title_of_Book=form.Title_of_Book.data, Authors_Last_Name=form.Authors_Last_Name.data)
-        db.session.add(Book)
+        book = Favorite_Books(Title_of_Book=form.Title_of_Book.data, Authors_Last_Name=form.Authors_Last_Name.data)
+        db.session.add(book)
         db.session.commit()
         return "<h2> My Favorite book is {0} {1}".format(form.Title_of_Book.data, form.Authors_Last_Name.data)
 
