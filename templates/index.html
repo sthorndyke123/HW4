@@ -3,9 +3,25 @@
   {% extends 'base.html' %}
 
   {% block body %}
-  Hello world
+  {% if books %}
+      <table>
+          <thead>
+              <tr>
+                  <th>ID</th>
+                  <th>Title of Book</th>
+                  <th>Author's Last Name</th>
+              </tr>
+          </thead>
 
-
-
-
-  {% endblock %}
+          <tbody>
+              {% for row in sthorndyke_Books %}
+              <tr>
+                  <td> {{ row.id }}</td>
+                  <td> {{ row.Title_of_Book }}</td>
+                  <td> {{ row.Authors_Last_Name }}</td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+{% endif %}
+{% endblock %}
