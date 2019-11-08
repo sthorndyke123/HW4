@@ -7,21 +7,20 @@ from flask_sqlalchemy import SQLAlchemy
 import pymysql
 import secrets
 
-conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(secrets.dbuser, secrets.dbpass, secrets.dbhost, secrets.dbr)
+conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(secrets.dbuser, secrets.dbpass, secrets.dbhost, secrets.dbname)
 
-app =Flask(__name__)
+app = Flask(__name__)
 app.config['SECRET_KEY']='SuperSecretKey'
-app.config['SQLALCHEMY_DATABASE-URI']= conn
-db =SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = conn
+db = SQLAlchemy(app)
 
-
-class Favorite_Books(db.Model):
+class sthorndyke_books(db.Model):
     id = db. Column(db.Integer, primary_key=True)
     Title_of_Book = db.Column(db.String(255))
     Authors_Last_Name = db.Column(db.String(255))
 
-    def __repr__(self):
-        return "id: {0} | Title of Book: {1} | Author\'s Last Name:{2}".format(self.id, self.Title_of_Book,self.Authors_Last_Name)
+def __repr__(self):
+        return "id: {0} | Title of Book: {1} | Author\'s Last Name:{2}".format(self.id, self.Title_of_Book, self.Authors_Last_Name)
 
 class BookForm(FlaskForm):
     Title_of_Book = StringField('Title of Book:', validators=[DataRequired()])
@@ -29,19 +28,23 @@ class BookForm(FlaskForm):
 
 @app.route('/')
 def index():
-    return render_template('index.html', pageTitle='Favorite Books')
+    all_books = sthorndyke_books.query.all()
+    return render_template('index.html',books=all_books, pageTitle='Favorite Books')
 
 
 @app.route('/add_book', methods=['GET','POST'])
 def add_book():
     form = BookForm()
     if form.validate_on_submit():
-        book = Favorite_Books(Title_of_Book=form.Title_of_Book.data, Authors_Last_Name=form.Authors_Last_Name.data)
+        book = sthorndyke_books(Title_of_Book=form.Title_of_Book.data, Authors_Last_Name=form.Authors_Last_Name.data)
         db.session.add(book)
         db.session.commit()
         return "<h2> My Favorite book is {0} {1}".format(form.Title_of_Book.data, form.Authors_Last_Name.data)
 
     return render_template('add_book.html', form=form, pageTitle='Add a New Book')
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
