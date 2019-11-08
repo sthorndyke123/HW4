@@ -5,6 +5,7 @@
 
   {% block body %}
   {% if books %}
+<<<<<<< HEAD
         <table>
             <thead>
                 <tr>
@@ -25,4 +26,26 @@
             </tbody>
         </table>
   {% endif %}
+=======
+      <table>
+          <thead>
+              <tr>
+                  <th>ID</th>
+                  <th>Title of Book</th>
+                  <th>Author's Last Name</th>
+              </tr>
+          </thead>
+
+          <tbody>
+              {% for row in sthorndyke_Books %}
+              <tr>
+                  <td> {{ row.id }}</td>
+                  <td> {{ row.Title_of_Book }}</td>
+                  <td> {{ row.Authors_Last_Name }}</td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+{% endif %}
+>>>>>>> dabb6e685f6b0da92cb956db751a16424d60b5a9
 {% endblock %}
