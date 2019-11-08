@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block body %}
+<div>
+
+  <h3>Add a New Book </h3>
+
+  <form method="POST" action="{{ url_for('add_book') }}">
+
+    {{ form.csrf_token }}
+    {{ form.Title_of_Book.label }} {{ form.Title_of_Book(size=20) }}
+    {{ form.Authors_Last_Name.label }} {{ form.Authors_Last_Name(size=20) }}
+
+    <input type="submit" value="Add Book"
+
+    </form>
+
+  </div>
+  {% endblock %}
