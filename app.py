@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template
+from flask import render_template, redirect
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired
@@ -39,7 +39,7 @@ def add_book():
         book = sthorndyke_books(Title_of_Book=form.Title_of_Book.data, Authors_Last_Name=form.Authors_Last_Name.data)
         db.session.add(book)
         db.session.commit()
-        return "<h2> My Favorite book is {0} {1}".format(form.Title_of_Book.data, form.Authors_Last_Name.data)
+        return redirect('/')
 
     return render_template('add_book.html', form=form, pageTitle='Add a New Book')
 
