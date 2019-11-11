@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template, redirect, request
+from flask import render_template, redirect
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired
@@ -20,14 +20,13 @@ app.config['SECRET_KEY']='SuperSecretKey'
 app.config['SQLALCHEMY_DATABASE_URI'] = conn
 db = SQLAlchemy(app)
 
-
 class sthorndyke_books(db.Model):
     id = db. Column(db.Integer, primary_key=True)
     Title_of_Book = db.Column(db.String(255))
     Authors_Last_Name = db.Column(db.String(255))
 
-    def __repr__(self):
-        return "id: {0} | Title of Book: {1} | Author\'s Last Name:{2}".format(self.id, self.Title_of_Book,self.Authors_Last_Name)
+def __repr__(self):
+        return "id: {0} | Title of Book: {1} | Author\'s Last Name:{2}".format(self.id, self.Title_of_Book, self.Authors_Last_Name)
 
 class BookForm(FlaskForm):
     Title_of_Book = StringField('Title of Book:', validators=[DataRequired()])
@@ -36,7 +35,7 @@ class BookForm(FlaskForm):
 @app.route('/')
 def index():
     all_books = sthorndyke_books.query.all()
-    return render_template('index.html', books=all_books, pageTitle='Favorite Books')
+    return render_template('index.html',books=all_books, pageTitle='Favorite Books')
 
 
 @app.route('/add_book', methods=['GET','POST'])
@@ -44,14 +43,13 @@ def add_book():
     form = BookForm()
     print("before validate")
     if form.validate_on_submit():
-        print("before object")
         book = sthorndyke_books(Title_of_Book=form.Title_of_Book.data, Authors_Last_Name=form.Authors_Last_Name.data)
-        print(book)
         db.session.add(book)
         db.session.commit()
         return redirect('/')
 
     return render_template('add_book.html', form=form, pageTitle='Add a New Book')
+
 
 
 

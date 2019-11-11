@@ -1,28 +1,29 @@
 
 
+
   {% extends 'base.html' %}
 
   {% block body %}
   <p><a href="{{ url_for('add_book')}}"> Add a new book</a></p>
   {% if books %}
-      <table>
-          <thead>
-              <tr>
-                  <th>ID</th>
-                  <th>Title of Book</th>
-                  <th>Author's Last Name</th>
-              </tr>
-          </thead>
+    <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title of Book</th>
+                    <th>Author's Last Name</th>
+                </tr>
+            </thead>
 
-          <tbody>
-              {% for row in books %}
-              <tr>
-                  <td> {{ row.id }}</td>
-                  <td> {{ row.Title_of_Book }}</td>
-                  <td> {{ row.Authors_Last_Name }}</td>
-              </tr>
-              {% endfor %}
-          </tbody>
-      </table>
+            <tbody>
+                {% for row in books %}
+                <tr>
+                    <td> {{ row.id }}</td>
+                    <td> {{ row.Title_of_Book }}</td>
+                    <td> {{ row.Authors_Last_Name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 {% endif %}
 {% endblock %}
