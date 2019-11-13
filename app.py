@@ -1,18 +1,14 @@
 from flask import Flask
-from flask import render_template, redirect
+from flask import render_template, redirect, request
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 import pymysql
-import os
+import secrets
 
-dbuser = os.environ.get('DBUSER')
-dbpass = os.environ.get('DBPASS')
-dbhost = os.environ.get('DBHOST')
-dbname = os.environ.get('DBNAME')
 
-conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(dbuser, dbpass, dbhost, dbname)
+conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(secrets.dbuser, secrets.dbpass, secrets.dbhost, secrets.dbname)
 
 app = Flask(__name__)
 app.config['SECRET_KEY']='SuperSecretKey'
@@ -40,7 +36,6 @@ def index():
 @app.route('/add_book', methods=['GET','POST'])
 def add_book():
     form = BookForm()
-    print("before validate")
     if form.validate_on_submit():
         book = sthorndyke_books(Title_of_Book=form.Title_of_Book.data, Authors_Last_Name=form.Authors_Last_Name.data)
         db.session.add(book)
@@ -48,6 +43,16 @@ def add_book():
         return redirect('/')
 
     return render_template('add_book.html', form=form, pageTitle='Add a New Book')
+
+@app.route('/delete_book/<int:id>', methods=['GET','POST'])
+def delete_book(id):
+    if request.method == 'POST':
+        book_1= sthorndyke_books.query.get_or_404(id)
+        db.session.delete(book_1)
+        db.session.commit()
+        return redirect("/")
+    else:
+        return redirect("/")
 
 
 
