@@ -1,9 +1,10 @@
-from flask import Flask
+from flask import Flask, url_for
 from flask import render_template, redirect, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import or_
 import pymysql
 import secrets
 
@@ -34,6 +35,23 @@ def index():
     return render_template('index.html',books=all_books, pageTitle='Favorite Books')
 
 
+@app.route('/search', methods=['GET','POST'])
+def search():
+    if request.method == 'POST':
+        print('post method')
+        form = request.form
+        search_value = form['search_string']
+        print(search_value)
+        search = "%{}%".format(search_value)
+        print(search)
+        results = sthorndyke_books.query.filter(or_(sthorndyke_books.Title_of_Book.like(search),
+                                                    sthorndyke_books.Authors_Last_Name.like(search))).all()
+        return render_template('index.html', books=results, pageTitle='Favorite Books', legend="Search Results")
+    else:
+        return redirect('/')
+
+
+
 @app.route('/add_book', methods=['GET','POST'])
 def add_book():
     form = BookForm()
@@ -61,7 +79,7 @@ def get_book(id):
         book= sthorndyke_books.query.get_or_404(id)
         return render_template('book.html', form=book, pageTitle='Book Details', legend="Book Details")
 
-@app.route('/book/<int:id>/update', methods=['GET','POST'])
+@app.route('/update_book/<int:id>/update', methods=['GET','POST'])
 def update_book(id):
     book = sthorndyke_books.query.get_or_404(id)
     form = BookForm()
@@ -70,7 +88,7 @@ def update_book(id):
         book.Title_of_Book = form.Title_of_Book.data
         book.Authors_Last_Name = form.Authors_Last_Name.data
         db.session.commit()
-        return redirect(url_for('get_book', id=book_3.id))
+        return redirect(url_for('get_book', id=book.id))
     form.id.data = book.id
     form.Title_of_Book.data = book.Title_of_Book
     form.Authors_Last_Name.data = book.Authors_Last_Name
