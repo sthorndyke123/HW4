@@ -44,7 +44,7 @@ def add_book():
 
     return render_template('add_book.html', form=form, pageTitle='Add a New Book')
 
-@app.route('/delete_book/<int:id>', methods=['GET','POST'])
+@app.route('/book/<int:id>', methods=['GET','POST'])
 def delete_book(id):
     if request.method == 'POST':
         book_1= sthorndyke_books.query.get_or_404(id)
@@ -54,6 +54,26 @@ def delete_book(id):
     else:
         return redirect("/")
 
+
+@app.route('/book/<int:id>', methods=['GET','POST'])
+def get_book(id):
+        book= sthorndyke_books.query.get_or_404(id)
+        return render_template('book.html', form=book, pageTitle='Book Details', legend="Book Details")
+
+@app.route('/book/<int:id>/update', methods=['GET','POST'])
+def update_book(id):
+    book = sthorndyke_books.query.get_or_404(id)
+    form = BookForm()
+
+    if form.validate_on_submit():
+        book.Title_of_Book = form.Title_of_Book.data
+        book.Authors_Last_Name = form.Authors_Last_Name.data
+        db.session.commit()
+        return redirect(url_for('get_book', id=book_3.id))
+    form.id.data = book.id
+    form.Title_of_Book.data = book.Title_of_Book
+    form.Authors_Last_Name.data = book.Authors_Last_Name
+    return render_template('update_book.html', form=form, pageTitle='Update Book', legend="Update A Book")
 
 
 
