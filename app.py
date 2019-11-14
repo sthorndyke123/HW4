@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template, redirect, request
 from flask_wtf import FlaskForm
-from wtforms import StringField
+from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 import pymysql
@@ -24,6 +24,7 @@ def __repr__(self):
         return "id: {0} | Title of Book: {1} | Author\'s Last Name:{2}".format(self.id, self.Title_of_Book, self.Authors_Last_Name)
 
 class BookForm(FlaskForm):
+    id = IntegerField('id:')
     Title_of_Book = StringField('Title of Book:', validators=[DataRequired()])
     Authors_Last_Name = StringField('Author\'s Last Name:', validators=[DataRequired()])
 
@@ -55,7 +56,7 @@ def delete_book(id):
         return redirect("/")
 
 
-@app.route('/book/<int:id>', methods=['GET','POST'])
+@app.route('/get_book/<int:id>', methods=['GET','POST'])
 def get_book(id):
         book= sthorndyke_books.query.get_or_404(id)
         return render_template('book.html', form=book, pageTitle='Book Details', legend="Book Details")
